@@ -82,7 +82,7 @@
                                 </connections>
                             </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="pR7-Mt-WnY" userLabel="numbersTable">
-                                <rect key="frame" x="87" y="541" width="240" height="128"/>
+                                <rect key="frame" x="87" y="541" width="240" height="321"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
@@ -97,6 +97,7 @@
                         <outlet property="minimum" destination="a47-C9-CPn" id="d2M-FX-7ca"/>
                         <outlet property="newNumberButton" destination="8bC-Xf-vdC" id="2cI-Hy-XO6"/>
                         <outlet property="number" destination="g9j-2V-0gs" id="GQb-DA-vzD"/>
+                        <outlet property="numbersTable" destination="pR7-Mt-WnY" id="v90-jA-AGj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

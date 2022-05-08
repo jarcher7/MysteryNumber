@@ -7,21 +7,40 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITextFieldDelegate {
+class ViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource {
+
+    @IBOutlet weak var number: UITextField!
+    @IBOutlet var newNumberButton: UIView!
+    @IBOutlet weak var minSwitch: UISwitch!
+    @IBOutlet weak var maxSwitch: UISwitch!
+    @IBOutlet weak var minimum: UITextField!
+    @IBOutlet weak var maximum: UITextField!
+    @IBOutlet weak var numbersTable: UITableView!
 
     let MIN : Int = 75;
     let MAX : Int = 279;
+
+    var numbers : [Int] = []
+    var sorted : [Int] = []
+
+    // MARK: - View
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         doReset()
 
-        minSwitch.isOn = false
-        maxSwitch.isOn = false
+        self.minSwitch.isOn = false
+        self.maxSwitch.isOn = false
 
-        minimum.delegate = self
-        maximum.delegate = self
+        self.minimum.delegate = self
+        self.maximum.delegate = self
+
+        self.numbersTable.delegate = self
+        self.numbersTable.dataSource = self
+        self.numbersTable.register(UITableViewCell.self, forCellReuseIdentifier: "numCell")
+        self.numbersTable.separatorColor = UIColor.white
+        self.numbersTable.separatorStyle = UITableViewCell.SeparatorStyle.none;
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -32,18 +51,38 @@ class ViewController: UIViewController, UITextFieldDelegate {
         ViewController.lockOrientation(.all)
     }
 
+    // MARK: - Event Handlers
+
     @IBAction func onNewNumberClick(_ sender: Any) {
         let num = generateNumber()
-        number.text = String(num)
+        self.number.text = String(num)
+        self.numbers.insert(num, at: 0)
+        self.sorted.insert(num, at: 0)
+        self.sorted.sort(by: >)
+        self.numbersTable.reloadData()
+        self.numbersTable.scrollToRow(at: IndexPath(row: 0, section: 0), at: .middle, animated: true)
     }
 
     @IBAction func onResetClick(_ sender: Any) {
         doReset()
     }
 
+    // MARK: - Helpers
+
+    fileprivate func doReset() {
+        self.number.text = "? ? ?"
+        self.minimum.text = String(MIN)
+        self.maximum.text = String(MAX)
+        self.numbers = []
+        self.sorted = []
+        self.numbersTable.reloadData()
+    }
+
+    // MARK: - Numbers
+
     func generateNumber() -> Int {
-        var min : Int = MIN
-        var max : Int = MAX
+        var min : Int = 1
+        var max : Int = 300
         if (minSwitch.isOn) {
             getLimitValue(textField: minimum, defValue: MIN, value: &min)
         }
@@ -55,14 +94,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
             minimum.text = String(min)
             maximum.text = String(max)
         }
-        let random = Int.random(in: min...max)
+        var random = Int.random(in: min...max)
+        while (self.numbers.contains(random)) {
+            random = Int.random(in: min...max)
+        }
         return random;
-    }
-
-    fileprivate func doReset() {
-        number.text = "? ? ?"
-        minimum.text = String(MIN)
-        maximum.text = String(MAX)
     }
 
     fileprivate func getLimitValue(textField: UITextField, defValue: Int, value: inout Int) {
@@ -81,12 +117,29 @@ class ViewController: UIViewController, UITextFieldDelegate {
         return true
     }
 
-    @IBOutlet weak var number: UITextField!
-    @IBOutlet var newNumberButton: UIView!
-    @IBOutlet weak var minSwitch: UISwitch!
-    @IBOutlet weak var maxSwitch: UISwitch!
-    @IBOutlet weak var minimum: UITextField!
-    @IBOutlet weak var maximum: UITextField!
+    // MARK: - numbersTable
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        self.numbers.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell:UITableViewCell = self.numbersTable.dequeueReusableCell(withIdentifier: "numCell")! as UITableViewCell
+        cell.textLabel?.font = UIFont.monospacedSystemFont(ofSize: 12, weight: UIFont.Weight(rawValue: 15) )
+        cell.textLabel?.textAlignment = .center
+        var leftStr = String(self.numbers[indexPath.row])
+        while (leftStr.count < 3) { leftStr.insert(" ", at: leftStr.index(leftStr.startIndex, offsetBy: 0)) }
+        var rightStr = String(self.sorted[indexPath.row])
+        while (rightStr.count < 3) { rightStr.insert(" ", at: rightStr.index(rightStr.startIndex, offsetBy: 0)) }
+        cell.textLabel?.text = String(format: "%@\t\t\t\t\t%@", leftStr, rightStr)
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 30
+    }
+
+    // MARK: - Orientation Lock
 
     static func lockOrientation(_ orientation: UIInterfaceOrientationMask) {
 
@@ -95,7 +148,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
     }
 
-    /// OPTIONAL Added method to adjust lock and rotate to the desired orientation
     static func lockOrientation(_ orientation: UIInterfaceOrientationMask, andRotateTo rotateOrientation:UIInterfaceOrientation) {
 
         self.lockOrientation(orientation)
@@ -104,4 +156,36 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
 
 }
+
+//class NumberCell: UITableViewCell {
+//
+//    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+//        super.init(style: style, reuseIdentifier: reuseIdentifier)
+//        addSubview(cellView)
+//        cellView.addSubview(dayLabel)
+//        self.selectionStyle = .none
+//    }
+//
+//    required init?(coder aDecoder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
+//
+//    let cellView: UIView = {
+//        let view = UIView()
+//        view.backgroundColor = UIColor.red
+//        view.layer.cornerRadius = 10
+//        view.translatesAutoresizingMaskIntoConstraints = false
+//        return view
+//    }()
+//
+//    let dayLabel: UILabel = {
+//        let label = UILabel()
+//        label.text = "Day 1"
+//        //label.textColor = UIColor.white
+//        //label.font = UIFont.boldSystemFont(ofSize: 16)
+//        label.translatesAutoresizingMaskIntoConstraints = false
+//        return label
+//    }()
+//
+//}
 
