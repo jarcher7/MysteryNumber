@@ -44,16 +44,16 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate
     }
 
     override func viewDidAppear(_ animated: Bool) {
-        ViewController.lockOrientation(.portrait, andRotateTo: .portrait)
+//        ViewController.lockOrientation(.portrait, andRotateTo: .portrait)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
-        ViewController.lockOrientation(.all)
+//        ViewController.lockOrientation(.all)
     }
 
     // MARK: - Event Handlers
 
-    @IBAction func onNewNumberClick(_ sender: Any) {
+    @IBAction func onNewNumberClick(_ sender: UIButton) {
         let num = generateNumber()
         self.number.text = String(num)
         self.numbers.insert(num, at: 0)
@@ -63,7 +63,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate
         self.numbersTable.scrollToRow(at: IndexPath(row: 0, section: 0), at: .middle, animated: true)
     }
 
-    @IBAction func onResetClick(_ sender: Any) {
+    @IBAction func onResetClick(_ sender: UIButton) {
         doReset()
     }
 
@@ -139,21 +139,21 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate
         return 30
     }
 
-    // MARK: - Orientation Lock
-
-    static func lockOrientation(_ orientation: UIInterfaceOrientationMask) {
-
-        if let delegate = UIApplication.shared.delegate as? AppDelegate {
-            delegate.orientationLock = orientation
-        }
-    }
-
-    static func lockOrientation(_ orientation: UIInterfaceOrientationMask, andRotateTo rotateOrientation:UIInterfaceOrientation) {
-
-        self.lockOrientation(orientation)
-
-        UIDevice.current.setValue(rotateOrientation.rawValue, forKey: "orientation")
-    }
+//    // MARK: - Orientation Lock
+//
+//    static func lockOrientation(_ orientation: UIInterfaceOrientationMask) {
+//
+//        if let delegate = UIApplication.shared.delegate as? AppDelegate {
+//            delegate.orientationLock = orientation
+//        }
+//    }
+//
+//    static func lockOrientation(_ orientation: UIInterfaceOrientationMask, andRotateTo rotateOrientation:UIInterfaceOrientation) {
+//
+//        self.lockOrientation(orientation)
+//
+//        UIDevice.current.setValue(rotateOrientation.rawValue, forKey: "orientation")
+//    }
 
 }
 
