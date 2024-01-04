@@ -17,8 +17,8 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate
     @IBOutlet weak var maximum: UITextField!
     @IBOutlet weak var numbersTable: UITableView!
 
-    let MIN : Int = 75;
-    let MAX : Int = 279;
+    let MIN : Int = 99;
+    let MAX : Int = 300;
 
     var numbers : [Int] = []
     var sorted : [Int] = []
@@ -29,6 +29,9 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate
         super.viewDidLoad()
 
         doReset()
+
+        self.minimum.text = String(MIN)
+        self.maximum.text = String(MAX)
 
         self.minSwitch.isOn = false
         self.maxSwitch.isOn = false
@@ -63,8 +66,6 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate
 
     fileprivate func doReset() {
         self.number.text = "? ? ?"
-        self.minimum.text = String(MIN)
-        self.maximum.text = String(MAX)
         self.numbers = []
         self.sorted = []
         self.numbersTable.reloadData()
