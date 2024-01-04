@@ -43,14 +43,6 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate
         self.numbersTable.separatorStyle = UITableViewCell.SeparatorStyle.none;
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-//        ViewController.lockOrientation(.portrait, andRotateTo: .portrait)
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-//        ViewController.lockOrientation(.all)
-    }
-
     // MARK: - Event Handlers
 
     @IBAction func onNewNumberClick(_ sender: UIButton) {
@@ -139,53 +131,5 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate
         return 30
     }
 
-//    // MARK: - Orientation Lock
-//
-//    static func lockOrientation(_ orientation: UIInterfaceOrientationMask) {
-//
-//        if let delegate = UIApplication.shared.delegate as? AppDelegate {
-//            delegate.orientationLock = orientation
-//        }
-//    }
-//
-//    static func lockOrientation(_ orientation: UIInterfaceOrientationMask, andRotateTo rotateOrientation:UIInterfaceOrientation) {
-//
-//        self.lockOrientation(orientation)
-//
-//        UIDevice.current.setValue(rotateOrientation.rawValue, forKey: "orientation")
-//    }
-
 }
-
-//class NumberCell: UITableViewCell {
-//
-//    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-//        super.init(style: style, reuseIdentifier: reuseIdentifier)
-//        addSubview(cellView)
-//        cellView.addSubview(dayLabel)
-//        self.selectionStyle = .none
-//    }
-//
-//    required init?(coder aDecoder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-//
-//    let cellView: UIView = {
-//        let view = UIView()
-//        view.backgroundColor = UIColor.red
-//        view.layer.cornerRadius = 10
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//        return view
-//    }()
-//
-//    let dayLabel: UILabel = {
-//        let label = UILabel()
-//        label.text = "Day 1"
-//        //label.textColor = UIColor.white
-//        //label.font = UIFont.boldSystemFont(ofSize: 16)
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//        return label
-//    }()
-//
-//}
 
