@@ -48,6 +48,9 @@
                                         <subviews>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ddU-tw-uzH" userLabel="minimumSwitch">
                                                 <rect key="frame" x="0.0" y="0.0" width="51" height="31"/>
+                                                <connections>
+                                                    <action selector="onEditEnd:" destination="BYZ-38-t0r" eventType="valueChanged" id="QEP-IR-Cfb"/>
+                                                </connections>
                                             </switch>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Minimum" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="avB-ha-N0G" userLabel="minimumLabel">
                                                 <rect key="frame" x="84" y="0.0" width="70" height="31"/>
@@ -59,6 +62,9 @@
                                                 <rect key="frame" x="189" y="0.0" width="32" height="31"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
+                                                <connections>
+                                                    <action selector="onEditEnd:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="DK2-5a-mK0"/>
+                                                </connections>
                                             </textField>
                                         </subviews>
                                     </stackView>
@@ -67,6 +73,9 @@
                                         <subviews>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DP7-l3-T7H" userLabel="maximumSwitch">
                                                 <rect key="frame" x="0.0" y="0.0" width="51" height="31"/>
+                                                <connections>
+                                                    <action selector="onEditEnd:" destination="BYZ-38-t0r" eventType="valueChanged" id="8Q6-b9-WwJ"/>
+                                                </connections>
                                             </switch>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Maximum" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="57c-7l-n40" userLabel="maximumLabel">
                                                 <rect key="frame" x="82" y="0.0" width="74" height="31"/>
@@ -78,6 +87,9 @@
                                                 <rect key="frame" x="189" y="0.0" width="32" height="31"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
+                                                <connections>
+                                                    <action selector="onEditEnd:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="svq-Tu-RqW"/>
+                                                </connections>
                                             </textField>
                                         </subviews>
                                     </stackView>

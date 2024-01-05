@@ -8,20 +8,19 @@
 import UIKit
 
 class ViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource {
-
-    @IBOutlet weak var number: UITextField!
+    @IBOutlet var number: UITextField!
     @IBOutlet var newNumberButton: UIView!
-    @IBOutlet weak var minSwitch: UISwitch!
-    @IBOutlet weak var maxSwitch: UISwitch!
-    @IBOutlet weak var minimum: UITextField!
-    @IBOutlet weak var maximum: UITextField!
-    @IBOutlet weak var numbersTable: UITableView!
+    @IBOutlet var minSwitch: UISwitch!
+    @IBOutlet var maxSwitch: UISwitch!
+    @IBOutlet var minimum: UITextField!
+    @IBOutlet var maximum: UITextField!
+    @IBOutlet var numbersTable: UITableView!
 
-    let MIN : Int = 99;
-    let MAX : Int = 300;
+    let DEFAULT_MIN: Int = 99
+    let DEFAULT_MAX: Int = 300
 
-    var numbers : [Int] = []
-    var sorted : [Int] = []
+    var numbers: [Int] = []
+    var sorted: [Int] = []
 
     // MARK: - View
 
@@ -29,33 +28,64 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate
         super.viewDidLoad()
 
         doReset()
+        loadDefaults()
 
-        self.minimum.text = String(MIN)
-        self.maximum.text = String(MAX)
+        minimum.delegate = self
+        maximum.delegate = self
 
-        self.minSwitch.isOn = false
-        self.maxSwitch.isOn = false
+        numbersTable.delegate = self
+        numbersTable.dataSource = self
+        numbersTable.register(UITableViewCell.self, forCellReuseIdentifier: "numCell")
+        numbersTable.separatorColor = UIColor.white
+        numbersTable.separatorStyle = UITableViewCell.SeparatorStyle.none
+    }
 
-        self.minimum.delegate = self
-        self.maximum.delegate = self
+    func loadDefaults() {
+        let defaults = UserDefaults.standard
+        if defaults.bool(forKey: "init") == false {
+            minimum.text = String(DEFAULT_MIN)
+            maximum.text = String(DEFAULT_MAX)
+            minSwitch.isOn = false
+            maxSwitch.isOn = false
+        } else {
+            minimum.text = defaults.string(forKey: "minimum")
+            maximum.text = defaults.string(forKey: "maximum")
+            minSwitch.isOn = defaults.bool(forKey: "minOn")
+            maxSwitch.isOn = defaults.bool(forKey: "maxOn")
+        }
+    }
 
-        self.numbersTable.delegate = self
-        self.numbersTable.dataSource = self
-        self.numbersTable.register(UITableViewCell.self, forCellReuseIdentifier: "numCell")
-        self.numbersTable.separatorColor = UIColor.white
-        self.numbersTable.separatorStyle = UITableViewCell.SeparatorStyle.none;
+    func saveDefaults() {
+        let defaults = UserDefaults.standard
+        defaults.set(minimum.text, forKey: "minimum")
+        defaults.set(maximum.text, forKey: "maximum")
+        defaults.set(minSwitch.isOn, forKey: "minOn")
+        defaults.set(maxSwitch.isOn, forKey: "maxOn")
+        defaults.set(true, forKey: "init")
+    }
+
+    func enableUI(_ isEnabled: Bool) {
+        minSwitch.isEnabled = isEnabled
+        maxSwitch.isEnabled = isEnabled
+        minimum.isEnabled = isEnabled
+        maximum.isEnabled = isEnabled
     }
 
     // MARK: - Event Handlers
 
+    @IBAction func onEditEnd(_ sender: Any) {
+        saveDefaults()
+    }
+
     @IBAction func onNewNumberClick(_ sender: UIButton) {
+        enableUI(false)
         let num = generateNumber()
-        self.number.text = String(num)
-        self.numbers.insert(num, at: 0)
-        self.sorted.insert(num, at: 0)
-        self.sorted.sort(by: >)
-        self.numbersTable.reloadData()
-        self.numbersTable.scrollToRow(at: IndexPath(row: 0, section: 0), at: .middle, animated: true)
+        number.text = String(num)
+        numbers.insert(num, at: 0)
+        sorted.insert(num, at: 0)
+        sorted.sort(by: >)
+        numbersTable.reloadData()
+        numbersTable.scrollToRow(at: IndexPath(row: 0, section: 0), at: .middle, animated: true)
     }
 
     @IBAction func onResetClick(_ sender: UIButton) {
@@ -65,39 +95,40 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate
     // MARK: - Helpers
 
     fileprivate func doReset() {
-        self.number.text = "? ? ?"
-        self.numbers = []
-        self.sorted = []
-        self.numbersTable.reloadData()
+        number.text = "? ? ?"
+        numbers = []
+        sorted = []
+        numbersTable.reloadData()
+        enableUI(true)
     }
 
     // MARK: - Numbers
 
     func generateNumber() -> Int {
-        var min : Int = 1
-        var max : Int = 300
-        if (minSwitch.isOn) {
-            getLimitValue(textField: minimum, defValue: MIN, value: &min)
+        var min: Int = 1
+        var max: Int = 300
+        if minSwitch.isOn {
+            getLimitValue(textField: minimum, defValue: DEFAULT_MIN, value: &min)
         }
-        if (maxSwitch.isOn) {
-            getLimitValue(textField: maximum, defValue: MAX, value: &max)
+        if maxSwitch.isOn {
+            getLimitValue(textField: maximum, defValue: DEFAULT_MAX, value: &max)
         }
-        if (max < min) {
+        if max < min {
             (min, max) = (max, min)
             minimum.text = String(min)
             maximum.text = String(max)
         }
-        var random = Int.random(in: min...max)
-        while (self.numbers.contains(random)) {
-            random = Int.random(in: min...max)
+        var random = Int.random(in: min ... max)
+        while numbers.contains(random) {
+            random = Int.random(in: min ... max)
         }
-        return random;
+        return random
     }
 
     fileprivate func getLimitValue(textField: UITextField, defValue: Int, value: inout Int) {
-        let text : String = textField.text ?? String(defValue)
-        let minVal : Int = Int(text) ?? defValue
-        if ((minVal >= 0) && (minVal <= 300)) {
+        let text: String = textField.text ?? String(defValue)
+        let minVal: Int = Int(text) ?? defValue
+        if (minVal >= 0) && (minVal <= 300) {
             value = minVal
         } else {
             value = defValue
@@ -106,24 +137,24 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.view.endEditing(true)
+        view.endEditing(true)
         return true
     }
 
     // MARK: - numbersTable
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        self.numbers.count
+        numbers.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell:UITableViewCell = self.numbersTable.dequeueReusableCell(withIdentifier: "numCell")! as UITableViewCell
-        cell.textLabel?.font = UIFont.monospacedSystemFont(ofSize: 12, weight: UIFont.Weight(rawValue: 15) )
+        let cell: UITableViewCell = numbersTable.dequeueReusableCell(withIdentifier: "numCell")! as UITableViewCell
+        cell.textLabel?.font = UIFont.monospacedSystemFont(ofSize: 12, weight: UIFont.Weight(rawValue: 15))
         cell.textLabel?.textAlignment = .center
-        var leftStr = String(self.numbers[indexPath.row])
-        while (leftStr.count < 3) { leftStr.insert(" ", at: leftStr.index(leftStr.startIndex, offsetBy: 0)) }
-        var rightStr = String(self.sorted[indexPath.row])
-        while (rightStr.count < 3) { rightStr.insert(" ", at: rightStr.index(rightStr.startIndex, offsetBy: 0)) }
+        var leftStr = String(numbers[indexPath.row])
+        while leftStr.count < 3 { leftStr.insert(" ", at: leftStr.index(leftStr.startIndex, offsetBy: 0)) }
+        var rightStr = String(sorted[indexPath.row])
+        while rightStr.count < 3 { rightStr.insert(" ", at: rightStr.index(rightStr.startIndex, offsetBy: 0)) }
         cell.textLabel?.text = String(format: "%@\t\t\t\t\t%@", leftStr, rightStr)
         return cell
     }
@@ -131,6 +162,4 @@ class ViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 30
     }
-
 }
-
